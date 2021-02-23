@@ -23,8 +23,6 @@ const OPERATION_BY_OPERATOR = {
   '/': divide,
 }
 
-const hasOperator = str => typeof str === 'string' && OPERATORS.some(operator => str.includes(operator))
-
 const getMathTask = operator => str => str.split(operator)
   .map(trim)
   .reduce(OPERATION_BY_OPERATOR[operator])
@@ -63,7 +61,7 @@ const invokeNextCalculation = (firstExpression, secondExpression, index) => {
 const getExpressionsByRegExp = (str, regExp) => regExp.exec(str)
 
 const calculate = fullExpression => {
-  if (hasOperator(fullExpression)) {
+  if (isNaN(fullExpression)) {
     const expressionsWithBrackets = getExpressionsByRegExp(fullExpression, bracketExpressionRegExp)
 
     if (expressionsWithBrackets) {
