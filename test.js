@@ -11,11 +11,12 @@ const data = [
   '2+2 * 2',
   '200 /(50*2)',
   '(14 - 7)*(21/3)',
-  '(12 * 3)*(2 + 2 * 2)',
+  '(12 * 3)*((2 + 2) * 2)',
+  '(12 - 3)*((2 + 2) * (4 / 2))',
 ]
 
 describe('calculate', () => {
   it('should calculate', () => {
-    assert.deepStrictEqual(data.map(calculate), [13, 30, 6, 2, 49, 216])
+    assert.deepStrictEqual(data.map(calculate), [13, 30, 6, 2, 49, 288, 72])
   })
 })

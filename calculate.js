@@ -2,7 +2,7 @@
 
 const OPERATORS = ['+', '-', '*', '/']
 
-const bracketExpressionRegExp = /\(([^)]+)\)/
+const bracketExpressionRegExp = /\(([^)(]+)\)/
 const highPriorityCalculationRegExp = /(\d*\s?[*/]\s?\d*)/
 const lowPriorityCalculationRegExp = /(\d*\s?[+\-]\s?\d*)/
 
@@ -36,26 +36,26 @@ const buildCalculatorItem = operator => ({
 
 const CALCULATOR = OPERATORS.map(buildCalculatorItem)
 
-const resolveNextExpression = (operation1, operation2) => {
+const resolveNextExpression = (operation1, operation2, index) => {
   operation2 = operation2 || ''
 
   let nextExpression = operation1
 
-  if (startsWithOperatorRegExp.test(operation2)) {
+  if (!isNaN(index)) {
+    nextExpression = operation2.slice(0, index) + operation1 + operation2.slice(index)
+  } else if (startsWithOperatorRegExp.test(operation2)) {
     nextExpression = String(operation1) + operation2
-  }
-
-  if (endsWithOperatorRegExp.test(operation2)) {
+  } else if (endsWithOperatorRegExp.test(operation2)) {
     nextExpression = operation2 + String(operation1)
   }
 
   return nextExpression
 }
 
-const invokeNextCalculation = (firstExpression, secondExpression) => {
+const invokeNextCalculation = (firstExpression, secondExpression, index) => {
   const result = calculate(firstExpression)
 
-  const nextExpression = resolveNextExpression(result, trim(secondExpression))
+  const nextExpression = resolveNextExpression(result, trim(secondExpression), index)
 
   return calculate(nextExpression)
 }
@@ -70,7 +70,7 @@ const calculate = fullExpression => {
       const expressionInBrackets = expressions[1]
       const secondExpression = fullExpression.replace(expressions[0], '')
 
-      return invokeNextCalculation(expressionInBrackets, secondExpression)
+      return invokeNextCalculation(expressionInBrackets, secondExpression, expressions.index)
     }
 
     const highPriorityExpressions = getExpressionsByRegExp(fullExpression, highPriorityCalculationRegExp)
