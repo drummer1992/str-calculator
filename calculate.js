@@ -64,19 +64,19 @@ const getExpressionsByRegExp = (str, regExp) => regExp.exec(str)
 
 const calculate = fullExpression => {
   if (hasOperator(fullExpression)) {
-    let expressions = getExpressionsByRegExp(fullExpression, bracketExpressionRegExp)
+    const expressionsWithBrackets = getExpressionsByRegExp(fullExpression, bracketExpressionRegExp)
 
-    if (expressions) {
-      const expressionInBrackets = expressions[1]
-      const secondExpression = fullExpression.replace(expressions[0], '')
+    if (expressionsWithBrackets) {
+      const expressionInBrackets = expressionsWithBrackets[1]
+      const secondExpression = fullExpression.replace(expressionsWithBrackets[0], '')
 
-      return invokeNextCalculation(expressionInBrackets, secondExpression, expressions.index)
+      return invokeNextCalculation(expressionInBrackets, secondExpression, expressionsWithBrackets.index)
     }
 
     const highPriorityExpressions = getExpressionsByRegExp(fullExpression, highPriorityCalculationRegExp)
     const lowPriorityExpressions = getExpressionsByRegExp(fullExpression, lowPriorityCalculationRegExp)
 
-    expressions = highPriorityExpressions || lowPriorityExpressions
+    const expressions = highPriorityExpressions || lowPriorityExpressions
 
     const expressionToCalculate = expressions ? expressions[0] : fullExpression
 
