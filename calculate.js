@@ -16,8 +16,6 @@ const sub = (acc, n) => Number(acc) - Number(n)
 const multiply = (acc, n) => Number(acc) * Number(n)
 const divide = (acc, n) => Number(acc) / Number(n)
 
-const getExpression = (str, regExp) => regExp.exec(str)
-
 const OPERATION_BY_OPERATOR = {
   '+': sum,
   '-': sub,
@@ -62,9 +60,11 @@ const invokeNextCalculation = (firstExpression, secondExpression) => {
   return calculate(nextExpression)
 }
 
+const getExpressionsByRegExp = (str, regExp) => regExp.exec(str)
+
 const calculate = fullExpression => {
   if (hasOperator(fullExpression)) {
-    const expressions = getExpression(fullExpression, bracketExpressionRegExp)
+    let expressions = getExpressionsByRegExp(fullExpression, bracketExpressionRegExp)
 
     if (expressions) {
       const expressionInBrackets = expressions[1]
@@ -73,18 +73,18 @@ const calculate = fullExpression => {
       return invokeNextCalculation(expressionInBrackets, secondExpression)
     }
 
-    const highPriorityExpression = getExpression(fullExpression, highPriorityCalculationRegExp)
-    const lowPriorityExpression = getExpression(fullExpression, lowPriorityCalculationRegExp)
+    const highPriorityExpressions = getExpressionsByRegExp(fullExpression, highPriorityCalculationRegExp)
+    const lowPriorityExpressions = getExpressionsByRegExp(fullExpression, lowPriorityCalculationRegExp)
 
-    const expression = highPriorityExpression || lowPriorityExpression
+    expressions = highPriorityExpressions || lowPriorityExpressions
 
-    const expressionToCalculate = expression ? expression[0] : fullExpression
+    const expressionToCalculate = expressions ? expressions[0] : fullExpression
 
     const { compute } = CALCULATOR.find(item => item.hasOperator(expressionToCalculate))
 
     const computedExpression = compute(expressionToCalculate)
 
-    const secondExpression = expression.input.replace(expressionToCalculate, '')
+    const secondExpression = expressions.input.replace(expressionToCalculate, '')
 
     return invokeNextCalculation(computedExpression, secondExpression)
   }
