@@ -75,7 +75,11 @@ const calculate = fullExpression => {
       const expressionInBrackets = expressionsWithBrackets[1]
       const secondExpression = cleanupSubExpression(fullExpression, expressionsWithBrackets[0])
 
-      return invokeNextCalculation(expressionInBrackets, secondExpression, expressionsWithBrackets.index)
+      return invokeNextCalculation(
+        expressionInBrackets,
+        secondExpression,
+        expressionsWithBrackets.index,
+      )
     }
 
     const highPriorityExpressions = getExpressionsByRegExp(fullExpression, highPriorityCalculationRegExp)
@@ -89,7 +93,11 @@ const calculate = fullExpression => {
 
     const computedExpression = compute(expressionToCalculate)
 
-    const secondExpression = cleanupSubExpression(expressions.input, expressionToCalculate)
+    const secondExpression = cleanupSubExpression(
+      expressions.input,
+      expressionToCalculate,
+      expressionToCalculate.index,
+    )
 
     return invokeNextCalculation(computedExpression, secondExpression)
   }
