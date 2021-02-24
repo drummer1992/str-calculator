@@ -1,5 +1,7 @@
 'use strict'
 
+const assert = require('assert')
+
 const OPERATORS = ['+', '-', '*', '/']
 
 const bracketExpressionRegExp = /\(([^)(]+)\)/
@@ -34,17 +36,18 @@ const buildCalculatorItem = operator => ({
 
 const CALCULATOR = OPERATORS.map(buildCalculatorItem)
 
-const resolveNextExpression = (operation1, operation2, index) => {
-  operation2 = operation2 || ''
+const resolveNextExpression = (expression1, expression2, index) => {
+  expression1 = String(expression1)
+  expression2 = expression2 || ''
 
-  let nextExpression = operation1
+  let nextExpression = expression1
 
   if (!isNaN(index)) {
-    nextExpression = operation2.slice(0, index) + operation1 + operation2.slice(index)
-  } else if (startsWithOperatorRegExp.test(operation2)) {
-    nextExpression = String(operation1) + operation2
-  } else if (endsWithOperatorRegExp.test(operation2)) {
-    nextExpression = operation2 + String(operation1)
+    nextExpression = expression2.slice(0, index) + expression1 + expression2.slice(index)
+  } else if (startsWithOperatorRegExp.test(expression2)) {
+    nextExpression = expression1 + expression2
+  } else if (endsWithOperatorRegExp.test(expression2)) {
+    nextExpression = expression2 + expression1
   }
 
   return nextExpression
@@ -60,8 +63,11 @@ const invokeNextCalculation = (firstExpression, secondExpression, index) => {
 
 const getExpressionsByRegExp = (str, regExp) => regExp.exec(str)
 
+const calculationIsNeeded = str => typeof str === 'string'
+  && OPERATORS.some(operator => str.includes(operator))
+
 const calculate = fullExpression => {
-  if (isNaN(fullExpression)) {
+  if (calculationIsNeeded(fullExpression)) {
     const expressionsWithBrackets = getExpressionsByRegExp(fullExpression, bracketExpressionRegExp)
 
     if (expressionsWithBrackets) {
@@ -87,7 +93,9 @@ const calculate = fullExpression => {
     return invokeNextCalculation(computedExpression, secondExpression)
   }
 
-  return fullExpression
+  assert(!isNaN(fullExpression), 'Unable to calculate math expression')
+
+  return Number(fullExpression)
 }
 
 module.exports = calculate
