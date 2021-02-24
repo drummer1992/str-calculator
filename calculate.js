@@ -12,7 +12,7 @@ const startsWithOperatorRegExp = /^[+-/*]/
 const endsWithOperatorRegExp = /[+-/*]$/
 
 const trim = str => str.trim()
-const cleanupSubExpression = (expression, subExpression) => expression.replace(subExpression, '')
+const removeSubExpression = (expression, subExpression) => expression.replace(subExpression, '')
 
 const sum = (acc, n) => Number(acc) + Number(n)
 const sub = (acc, n) => Number(acc) - Number(n)
@@ -73,7 +73,7 @@ const calculate = fullExpression => {
 
     if (expressionsWithBrackets) {
       const expressionInBrackets = expressionsWithBrackets[1]
-      const secondExpression = cleanupSubExpression(fullExpression, expressionsWithBrackets[0])
+      const secondExpression = removeSubExpression(fullExpression, expressionsWithBrackets[0])
 
       return invokeNextCalculation(
         expressionInBrackets,
@@ -93,7 +93,7 @@ const calculate = fullExpression => {
 
     const computedExpression = compute(expressionToCalculate)
 
-    const secondExpression = cleanupSubExpression(expressions.input, expressionToCalculate)
+    const secondExpression = removeSubExpression(expressions.input, expressionToCalculate)
 
     return invokeNextCalculation(
       computedExpression,
