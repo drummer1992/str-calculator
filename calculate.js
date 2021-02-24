@@ -93,13 +93,13 @@ const calculate = fullExpression => {
 
     const computedExpression = compute(expressionToCalculate)
 
-    const secondExpression = cleanupSubExpression(
-      expressions.input,
-      expressionToCalculate,
+    const secondExpression = cleanupSubExpression(expressions.input, expressionToCalculate)
+
+    return invokeNextCalculation(
+      computedExpression,
+      secondExpression,
       expressionToCalculate.index,
     )
-
-    return invokeNextCalculation(computedExpression, secondExpression)
   }
 
   assert(!isNaN(fullExpression), 'Unable to calculate math expression')
