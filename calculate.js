@@ -37,27 +37,27 @@ const buildCalculatorItem = operator => ({
 
 const CALCULATOR = OPERATORS.map(buildCalculatorItem)
 
-const resolveNextExpression = (expression1, expression2, index) => {
-  expression1 = String(expression1)
-  expression2 = expression2 || ''
+const resolveNextExpression = (computedExpression, secondExpression, index) => {
+  computedExpression = String(computedExpression)
+  secondExpression = trim(secondExpression)
 
-  let nextExpression = expression1
+  let nextExpression = computedExpression
 
   if (!isNaN(index)) {
-    nextExpression = expression2.slice(0, index) + expression1 + expression2.slice(index)
-  } else if (startsWithOperatorRegExp.test(expression2)) {
-    nextExpression = expression1 + expression2
-  } else if (endsWithOperatorRegExp.test(expression2)) {
-    nextExpression = expression2 + expression1
+    nextExpression = secondExpression.slice(0, index) + computedExpression + secondExpression.slice(index)
+  } else if (startsWithOperatorRegExp.test(secondExpression)) {
+    nextExpression = computedExpression + secondExpression
+  } else if (endsWithOperatorRegExp.test(secondExpression)) {
+    nextExpression = secondExpression + computedExpression
   }
 
   return nextExpression
 }
 
 const invokeNextCalculation = (firstExpression, secondExpression, index) => {
-  const result = calculate(firstExpression)
+  const computedExpression = calculate(firstExpression)
 
-  const nextExpression = resolveNextExpression(result, trim(secondExpression), index)
+  const nextExpression = resolveNextExpression(computedExpression, secondExpression, index)
 
   return calculate(nextExpression)
 }
