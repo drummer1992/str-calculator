@@ -98,7 +98,7 @@ const calculate = fullExpression => {
     return invokeNextCalculation(
       computedExpression,
       secondExpression,
-      expressionToCalculate.index,
+      expressions.index,
     )
   }
 
